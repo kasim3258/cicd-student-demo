@@ -3,44 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CI/CD Demo</title>
+
+    <title>Student Result Dashboard</title>
+
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #eef2ff, #e0f2fe);
             min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a, #1e3a8a, #312e81);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #cbd5e1;
+            font-size: 17px;
+        }
+
+        .dashboard {
+            background: rgba(255,255,255,0.10);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 25px;
+            padding: 35px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+
+        .student {
             display: flex;
             align-items: center;
+            gap: 20px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .avatar {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa, #8b5cf6);
+            display: flex;
             justify-content: center;
-            margin: 0;
-        }
-        .card {
-            background: white;
-            width: min(650px, 90%);
-            padding: 45px;
-            text-align: center;
-            border-radius: 20px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
-        }
-        h1 { margin-bottom: 10px; }
-        h2 { color: #15803d; }
-        .status {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 18px;
-            border-radius: 999px;
-            background: #dcfce7;
-            color: #166534;
+            align-items: center;
+            font-size: 30px;
             font-weight: bold;
+        }
+
+        .student h2 {
+            font-size: 25px;
+        }
+
+        .student p {
+            color: #cbd5e1;
+            margin-top: 5px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .card .label {
+            color: #cbd5e1;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .card .value {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 18px;
+            background: linear-gradient(
+                135deg,
+                rgba(34,197,94,0.2),
+                rgba(16,185,129,0.08)
+            );
+            border: 1px solid rgba(74,222,128,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result h3 {
+            font-size: 20px;
+        }
+
+        .result p {
+            color: #bbf7d0;
+            margin-top: 5px;
+        }
+
+        .status {
+            background: #22c55e;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(34,197,94,0.3);
+        }
+
+        .pipeline {
+            margin-top: 30px;
+        }
+
+        .pipeline h3 {
+            margin-bottom: 18px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .step {
+            background: rgba(255,255,255,0.07);
+            padding: 18px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .step-icon {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .step span {
+            display: block;
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .dashboard {
+                padding: 22px;
+            }
+
+            .cards,
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .result {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="card">
-        <h1>Student CI/CD Demonstration</h1>
-        <h2>Deployment Successful</h2>
-        <p>This webpage was deployed automatically using GitHub Actions.</p>
-        <div class="status">Application Status: Running</div>
+
+    <div class="container">
+
+        <div class="header">
+            <div class="badge">🚀 CI/CD Deployment Demo</div>
+
+            <h1>Student Result Dashboard</h1>
+
+            <p>
+                Automated testing and deployment using GitHub Actions
+            </p>
+        </div>
+
+        <div class="dashboard">
+
+            <div class="student">
+                <div class="avatar">S</div>
+
+                <div>
+                    <h2>Student Performance</h2>
+                    <p>Academic Result Overview</p>
+                </div>
+            </div>
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="label">Student Mark</div>
+                    <div class="value">65 / 100</div>
+                </div>
+
+                <div class="card">
+                    <div class="label">Pass Mark</div>
+                    <div class="value">40</div>
+                </div>
+
+                <div class="card">
+                    <div class="label">Performance</div>
+                    <div class="value">65%</div>
+                </div>
+
+            </div>
+
+            <div class="result">
+
+                <div>
+                    <h3>🎓 Examination Result</h3>
+                    <p>The student has successfully passed the examination.</p>
+                </div>
+
+                <div class="status">
+                    ✓ PASS
+                </div>
+
+            </div>
+
+            <div class="pipeline">
+
+                <h3>⚙️ CI/CD Pipeline Status</h3>
+
+                <div class="steps">
+
+                    <div class="step">
+                        <div class="step-icon">📦</div>
+                        <strong>Source Code</strong>
+                        <span>GitHub Repository</span>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-icon">🧪</div>
+                        <strong>CI Testing</strong>
+                        <span>Automated Pytest</span>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-icon">🚀</div>
+                        <strong>CD Deployment</strong>
+                        <span>GitHub Pages</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Built with HTML & CSS • Deployed automatically with GitHub Actions
+        </div>
+
     </div>
+
 </body>
 </html>
